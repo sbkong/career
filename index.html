@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>경력 기술서 - 공수빈</title>
+<style>
+  :root {
+    --bg: #f3f4f7; --panel: #ffffff; --text: #1b2130; --muted: #687085;
+    --line: #e2e5ed; --soft: #f0f2f7;
+    --ai: #2f6bea; --design: #e07b00; --build: #7a4cf0; --ops: #0f9d8a;
+    --ai-soft: #e6eeff; --design-soft: #fff0db; --build-soft: #efe8ff; --ops-soft: #dff5f1;
+    --accent: #2f6bea; --shadow: 0 8px 28px rgba(20,30,60,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10131a; --panel: #1a1f2c; --text: #e7eaf2; --muted: #98a1b7;
+      --line: #2a3144; --soft: #222838;
+      --ai: #6f9bff; --design: #ffb454; --build: #a88bff; --ops: #3fcdb8;
+      --ai-soft: #1d2a4a; --design-soft: #3d2c12; --build-soft: #2a2350; --ops-soft: #143a36;
+      --accent: #6f9bff; --shadow: 0 8px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10131a; --panel: #1a1f2c; --text: #e7eaf2; --muted: #98a1b7;
+    --line: #2a3144; --soft: #222838;
+    --ai: #6f9bff; --design: #ffb454; --build: #a88bff; --ops: #3fcdb8;
+    --ai-soft: #1d2a4a; --design-soft: #3d2c12; --build-soft: #2a2350; --ops-soft: #143a36;
+    --accent: #6f9bff; --shadow: 0 8px 28px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.55; font-size: 14px;
+  }
+  button { font: inherit; color: inherit; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  /* ---------- top bar ---------- */
+  .top {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+    padding: 16px 20px; box-shadow: var(--shadow);
+  }
+  .who h1 { margin: 0; font-size: 22px; letter-spacing: -.01em; }
+  .who p { margin: 2px 0 0; color: var(--muted); }
+  .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-left: auto; }
+  .stat { background: var(--soft); border-radius: 12px; padding: 8px 14px; min-width: 104px; }
+  .stat b { display: block; font-size: 17px; }
+  .stat span { color: var(--muted); font-size: 12px; }
+  .btn {
+    border: 1px solid var(--line); background: var(--panel); border-radius: 10px;
+    padding: 6px 10px; cursor: pointer; font-size: 13px;
+  }
+  .btn:hover { border-color: var(--accent); }
+
+  /* ---------- panels ---------- */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+    padding: 16px 18px; margin-top: 14px; box-shadow: var(--shadow);
+  }
+  .panel-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 10px; }
+  .panel-head h2 { margin: 0; font-size: 15px; }
+  .hint { color: var(--muted); font-size: 12px; }
+  .spacer { flex: 1; }
+  .chip {
+    border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+    border-radius: 999px; padding: 4px 12px; cursor: pointer; font-size: 13px;
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .chip i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .chip.on { color: #fff; background: var(--text); border-color: var(--text); }
+  :root[data-theme="dark"] .chip.on { color: #10131a; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .chip.on { color: #10131a; } }
+  .chip[disabled] { opacity: .45; cursor: default; }
+  .search {
+    border: 1px solid var(--line); background: var(--soft); color: var(--text);
+    border-radius: 999px; padding: 6px 14px; font: inherit; outline: none; width: 220px;
+  }
+  .search:focus { border-color: var(--accent); }
+
+  /* ---------- gantt ---------- */
+  .gantt-scroll { overflow-x: auto; padding-bottom: 4px; }
+  .gantt { position: relative; min-width: 980px; }
+  .axis { display: grid; grid-template-columns: repeat(10, 1fr); border-bottom: 1px solid var(--line); }
+  .axis button {
+    border: 0; background: none; padding: 6px 0; cursor: pointer; color: var(--muted);
+    font-weight: 600; border-left: 1px dashed var(--line); text-align: left; padding-left: 6px;
+  }
+  .axis button:first-child { border-left: 0; }
+  .axis button:hover { color: var(--text); background: var(--soft); }
+  .axis button.on { color: #fff; background: var(--accent); border-radius: 6px 6px 0 0; }
+  .lanes { position: relative; }
+  .gridlines { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(10, 1fr); pointer-events: none; }
+  .gridlines span { border-left: 1px dashed var(--line); }
+  .gridlines span:first-child { border-left: 0; }
+  .now { position: absolute; top: 0; bottom: 0; width: 2px; background: #e5484d; opacity: .7; pointer-events: none; }
+  .now::after { content: "현재"; position: absolute; bottom: -4px; right: 5px; font-size: 11px; color: #e5484d; white-space: nowrap; }
+  .bar {
+    position: absolute; height: 24px; border-radius: 7px; border: 0; cursor: pointer;
+    padding: 0 8px; font-size: 12px; font-weight: 600; text-align: left; color: #fff;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    transition: transform .15s, opacity .2s, box-shadow .15s; transform-origin: left center;
+    animation: grow .6s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes grow { from { transform: scaleX(0); opacity: 0; } }
+  .bar.ai { background: var(--ai); } .bar.build { background: var(--build); } .bar.ops { background: var(--ops); }
+  .bar.minor { opacity: .55; }
+  .bar:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,.2); opacity: 1; z-index: 3; }
+  .bar.sel { outline: 3px solid var(--text); outline-offset: 2px; opacity: 1; z-index: 2; }
+  .bar.dim { opacity: .12; }
+  .bar.has-design { padding-left: 12px; }
+  .bar.has-design, .bar.has-design:hover { box-shadow: inset 5px 0 0 var(--design); }
+  .link { position: absolute; height: 0; border-top: 2px dotted var(--muted); opacity: .5; pointer-events: none; }
+  .tip {
+    position: fixed; z-index: 50; pointer-events: none; background: var(--text); color: var(--panel);
+    padding: 6px 10px; border-radius: 8px; font-size: 12px; max-width: 320px; display: none;
+  }
+  .tip b { display: block; }
+
+  /* ---------- master / detail ---------- */
+  .split { display: grid; grid-template-columns: minmax(280px, 340px) 1fr; gap: 14px; margin-top: 14px; align-items: start; }
+  .split .panel { margin-top: 0; }
+  .list { max-height: 560px; overflow: auto; margin: 0 -6px; padding: 0 6px; }
+  .item {
+    display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left;
+    border: 1px solid transparent; background: none; border-radius: 10px; padding: 8px 10px; cursor: pointer;
+  }
+  .item:hover { background: var(--soft); }
+  .item.sel { background: var(--soft); border-color: var(--line); }
+  .item i { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 3px; margin-top: 5px; }
+  .item b { display: block; font-weight: 600; font-size: 13.5px; }
+  .item span { color: var(--muted); font-size: 12px; }
+  .empty { color: var(--muted); padding: 20px 8px; text-align: center; }
+
+  .detail { min-height: 420px; position: sticky; top: 12px; }
+  .detail.swap .d-body { animation: fade .28s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateX(10px); } }
+  .d-top { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-start; }
+  .d-top h3 { margin: 0; font-size: 19px; flex: 1 1 320px; letter-spacing: -.01em; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 600; }
+  .badge.ai { background: var(--ai-soft); color: var(--ai); }
+  .badge.design { background: var(--design-soft); color: var(--design); }
+  .badge.build { background: var(--build-soft); color: var(--build); }
+  .badge.ops { background: var(--ops-soft); color: var(--ops); }
+  .d-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 12px; align-items: center; color: var(--muted); }
+  .d-desc { background: var(--soft); border-radius: 12px; padding: 12px 14px; margin: 0 0 14px; font-size: 14.5px; }
+  .cols { display: flex; flex-wrap: wrap; gap: 12px; }
+  .col { flex: 1 1 210px; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .col h4 { margin: 0 0 6px; font-size: 12px; letter-spacing: .06em; color: var(--muted); }
+  .col ul { margin: 0; padding-left: 17px; }
+  .col li { margin: 3px 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px;
+    font-size: 12.5px; cursor: pointer;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .pending { color: var(--muted); font-style: italic; }
+  .ai-col { border-color: var(--ai); background: var(--ai-soft); flex-basis: 100%; }
+  .ai-tag { background: var(--ai); border-color: var(--ai); color: #fff; }
+  .ai-tag:hover { color: #fff; opacity: .85; }
+
+  /* ---------- tech matrix ---------- */
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+  .tech-group { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .tech-group h4 { margin: 0 0 8px; font-size: 12px; color: var(--muted); letter-spacing: .06em; }
+  .tech-group .tags { gap: 6px; }
+  .tchip {
+    border: 1px solid var(--line); border-radius: 8px; padding: 3px 9px;
+    cursor: pointer; font-size: 12.5px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--ai) var(--p, 0%), var(--panel)), color-mix(in srgb, var(--build) var(--p, 0%), var(--panel)));
+  }
+  .tchip small { color: var(--muted); font-size: 11px; }
+  .tchip:hover { border-color: var(--accent); }
+  .tchip.hot { color: #fff; border-color: transparent; font-weight: 600; }
+  .tchip.hot small { color: rgba(255,255,255,.85); }
+  .tchip.on { background: var(--text); border-color: var(--text); color: var(--panel); }
+  .tchip.on small { color: var(--panel); }
+  .tchip.none { opacity: .5; cursor: default; }
+
+  /* ---------- others ---------- */
+  .others { list-style: none; margin: 0; padding: 0; }
+  .others li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 16px; padding: 7px 2px; border-top: 1px solid var(--line); }
+  .others li:first-child { border-top: 0; }
+  .others .when { color: var(--muted); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  #printAll { display: none; }
+
+  @media (max-width: 860px) {
+    .split { grid-template-columns: 1fr; }
+    .list { max-height: 300px; }
+    .detail { position: static; min-height: 0; }
+    .stats { margin-left: 0; }
+    .search { width: 100%; }
+  }
+  @media print {
+    body { background: #fff; }
+    .panel-head .chip, .search, .split, #techPanel, .hint { display: none !important; }
+    .panel, .top { box-shadow: none; }
+    .bar { animation: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    #printAll { display: block; }
+    .p-item { break-inside: avoid; border-top: 1px solid #ccc; padding: 10px 0; }
+    .p-item h3 { margin: 0 0 2px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="who">
+      <h1>공수빈 · 경력 기술서</h1>
+      <p>프로그램 설계·개발 · 트리니티 디아이비 (2017. 12 ~ 재직 중)</p>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>타임라인</h2>
+      <span class="spacer"></span>
+      <span id="catChips"></span>
+    </div>
+    <div class="gantt-scroll">
+      <div class="gantt">
+        <div class="axis" id="axis"></div>
+        <div class="lanes" id="lanes"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="split">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>프로젝트 <span class="hint" id="count"></span></h2>
+        <span class="spacer"></span>
+        <button class="btn" id="resetBtn" type="button">필터 초기화</button>
+      </div>
+      <input class="search" id="search" type="search" placeholder="이름·기술 검색" style="width:100%;margin-bottom:8px;">
+      <div class="list" id="list"></div>
+    </section>
+
+    <section class="panel detail" id="detail"></section>
+  </div>
+
+  <section class="panel" id="techPanel">
+    <div class="panel-head">
+      <h2>기술 스택</h2>
+    </div>
+    <div class="tech-grid" id="techGrid"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>그 외</h2></div>
+    <ul class="others">
+      <li><span>sLLM AI 플랫폼 구축</span><span class="when">2026. 01 ~ 2026. 06</span></li>
+      <li><span>RelflowSimulation 해석결과예측 솔루션 구축</span><span class="when">2026. 01 ~ 2026. 06</span></li>
+      <li><span>시뮬레이션 기반 AI도입 기술용역</span><span class="when">2026. 01 ~ 2026. 06</span></li>
+      <li><span>섬유산업 염색기술 노하우 DB화 및 AI 학습을 통한 색상 오류 자동 보정</span><span class="when">2025. 01 ~ 2025. 06</span></li>
+      <li><span>스마트제조혁신 기술개발사업</span><span class="when">2023. 01 ~ 2026. 07</span></li>
+      <li><span>가상검증플랫폼 구축사업 (섬유소재기업 대상 데이터 활용)</span><span class="when">2023. 07 ~ 2023. 11</span></li>
+      <li><span>AI기반 인텔리전트 자동차부품 최적설계지원 기술개발</span><span class="when">2022. 05 ~ 2024. 04</span></li>
+      <li><span>엔지니어링SW 클라우드 데이터 수집 및 분석 용역</span><span class="when">2020. 07 ~ 2020. 12 / 2023. 01 ~ 2023. 11</span></li>
+      <li><span>빅데이터 플랫폼 및 센터 구축 (데이터 연계 체계 구축)</span><span class="when">2019. 11 ~ 2019. 12 / 2020. 09 ~ 2020. 12</span></li>
+      <li><span>2019년 노후장비 교체 및 인프라 보강 사업</span><span class="when">2019. 09 ~ 2019. 10</span></li>
+      <li><span>신규 개발자를 위한 가이드 라인 구축</span></li>
+      <li><span>Elastic Search 빅데이터 분석 솔루션 구축</span></li>
+      <li><span>경기 컨텐츠 진흥원 데이터 전송 프로그램 개발</span></li>
+    </ul>
+  </section>
+
+  <section id="printAll"></section>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+/* ===================== DATA ===================== */
+const NOW = '2026-11';
+const CATS = { ai: 'AI', design: '설계', build: '시스템 구축', ops: '시스템 운영' };
+
+/* periods: [start, end] (YYYY-MM), end null = 진행중 */
+/*__PROJECTS_START__*/
+const PROJECTS = [
+  {
+    id: 'pacs', aiTypes: ["VLM", "컴퓨터 비전"], ai: ["판독 표시를 근거로 병변 위치 검출", "병변 영역 분할 및 라벨 저장"], title: 'S 병원 AI-PACS 영상 오토라벨링 플랫폼 구축', short: 'AI-PACS 오토라벨링',
+    periods: [['2026-08', null]], cats: ['ai', 'design', 'build'], client: 'S 병원',
+    desc: '병원 PACS의 의료 영상을 수집해 AI가 병변을 라벨링하고 의료진이 검수하는 플랫폼입니다.',
+    roles: ['인프라 및 시스템 아키텍처 설계', '의료 영상 수집 모듈 설계', '백엔드 DB 통합', '패키징 및 프로덕션 배포', 'AI 연계 규약서, 네트워크 구성 문서 작성'],
+    tech: ['Python', 'DICOM', 'PostgreSQL', 'Java', 'Spring Boot', 'Spring Security', 'JWT', 'JPA', 'QueryDSL', 'JavaScript', 'Vue.js', 'Vuetify', 'Docker', 'nginx', 'Ubuntu']
+  },
+  {
+    id: 'cad', aiTypes: ["유사도 검색", "이상치 탐지"], ai: ["2D 도면 입력 시 유사 도면 목록 검색", "도면 내 수치의 이상치 탐지"], title: 'I 사 CAD 설계 검토 자동화 시스템 구축', short: 'CAD 설계 검토 자동화',
+    periods: [['2026-03', null]], cats: ['ai', 'design', 'build'], client: 'I 사',
+    desc: '설계 문서 간 불일치와 도면의 수치 이상을 찾아내는 설계 검토 자동화 시스템입니다.',
+    roles: ['인프라 및 시스템 아키텍처 설계', '설계 문서 파서와 백엔드 연계 설계', '검토 결과 저장, 규칙 동기화, 보고서 생성, 교차 검증 모듈 개발'],
+    tech: ['Java', 'Spring Boot', 'Spring Security', 'JWT', 'JPA', 'QueryDSL', 'Quartz', 'MySQL/MariaDB', 'Python', 'JavaScript', 'Vue.js', 'Vuetify', 'Pinia', 'GitLab CI']
+  },
+  {
+    id: 'inhouse', aiTypes: ["LLM·RAG"], ai: ["GitLab·Redmine 연동 사내 AI 어시스턴트"], title: '사내 개발 인프라 구축', short: '사내 개발 인프라',
+    periods: [['2023-06', '2024-06']], cats: ['build', 'design', 'ops', 'ai'], client: '사내',
+    desc: '저장소 설정부터 CI/CD, 업무 관리, 서버 취약점 점검까지 사내 개발 과정을 표준화하고 자동화하는 개발 인프라입니다.',
+    roles: ['인프라 및 시스템 아키텍처 설계', '사내 GitLab, GitLab Runner, Redmine, Jenkins 시스템 구축 및 개발 지원', 'GitLab 프로젝트 자동 설정 도구 개발', 'GitLab·Redmine 사용자 연동, 라벨 자동화 웹훅 개발', 'Redmine 플러그인 개발', '서버 취약점 모니터링 시스템 개발', '서버실 네트워크 재구성'],
+    results: ['신규 프로젝트 초기 설정 자동화', '제품 온라인 업데이트 서버 구축', '서버 방화벽 전환 및 운영 매뉴얼 정비'],
+    tech: ['Python', 'Flask', 'Docker', 'nginx', 'GitLab CI', 'Jenkins', 'Redmine', 'Ruby', 'Ruby on Rails', 'MySQL/MariaDB', 'Rocky Linux']
+  },
+  {
+    id: 'kms', aiTypes: ["LLM·RAG", "OCR"], ai: ["사내 문서 검색 및 질의응답 챗봇", "스캔 문서 텍스트 추출"], title: 'KPX케미칼 KMS 지식관리 시스템 구축', short: 'KMS 지식관리',
+    periods: [['2025-08', '2026-01']], cats: ['build', 'design', 'ai'], client: 'KPX케미칼',
+    desc: '사내 문서를 등록·승인·공유하고 AI로 검색하는 지식관리 시스템입니다.',
+    roles: ['인프라 및 시스템 아키텍처 설계', '백엔드·포털 개발', '데이터 승인 페이지, 사용자 로그 페이지 개발', '백업 시스템 및 디스크 모니터링 구축', 'AI 문서 검색 API 권한 연동'],
+    tech: ['Java', 'Spring Boot', 'JPA', 'QueryDSL', 'Quartz', 'MySQL/MariaDB', 'JavaScript', 'Vue.js', 'Vuetify', 'Rocky Linux', 'Tomcat']
+  },
+  {
+    id: 'kai', aiTypes: ["컴퓨터 비전", "음성 처리"], ai: ["차량·보행자 탐지·추적, 번호판·보행자 비식별화, 차량 속도 추정", "사고 영상의 음성 분리 및 잡음 제거"], title: '자동차안전연구원 K-AI2 사고 분석 프로그램 개발', short: 'K-AI2 사고 분석',
+    periods: [['2025-06', '2025-12']], cats: ['build', 'design', 'ai'], client: '자동차안전연구원',
+    desc: '사고 영상과 차트 데이터, 음성을 동기화해 재생하고 분석하는 데스크톱 애플리케이션입니다.',
+    roles: ['인프라 및 시스템 아키텍처 설계', '다중 영상·음성 동기화 재생 엔진 설계', '메인프레임, 타임라인, 리소스 위젯 개발', '충돌 방향 계산기, 영상 내보내기, 차량 경로 자동 입력 개발', '라이선스 인증 기능 및 라이선스 서버 개발'],
+    results: ['기존 솔루션 대비 분석 작업 효율 향상', '설치본 및 온라인 업데이트 배포 체계 구축'],
+    tech: ['C++', 'Qt 5', 'FFmpeg', 'OpenCV', 'OpenGL', 'C#', '.NET 8', 'GitLab CI']
+  },
+  {
+    id: 'kbu-rebuild', title: '서울 시각장애인 생활이동지원센터 배차·관제 시스템 재구축', short: '배차·관제 시스템 재구축',
+    periods: [['2024-07', '2025-03']], cats: ['build', 'design'], client: '서울 시각장애인 생활이동지원센터',
+    desc: '24/7 운영 시각장애인 생활이동지원 배차·관제 시스템입니다.',
+    roles: ['프로젝트 리더', '인프라 및 시스템 아키텍처 설계', '자동 배차 엔진, 기사 앱 API, 실시간 동기화 서버 개발', '관제 웹과 기사 Android 앱 개발'],
+    results: ['생활이동지원센터 이용량 10% 증가', '이용자 대기 시간 2분 감소', '기존 C# 프로그램의 Java 기반 전환', '24/7 무중단 운영 체계 구축'],
+    tech: ['Java', 'Spring Boot', 'Spring Security', 'JWT', 'JPA', 'QueryDSL', 'MS-SQL', 'Socket.IO', 'FCM', 'JavaScript', 'Vue.js', 'Vuetify', 'Pinia', 'Kotlin', 'Android', 'BLE', 'Windows Server', 'Apache', 'Tomcat', 'GitLab CI']
+  },
+  {
+    id: 'keri', aiTypes: ["유사도 검색", "예측 모델(ML/DL)"], ai: ["3D 모델링 데이터 입력 시 유사 3D 모델 검색", "사용자 정의 모델 학습, 수치 예측, 시뮬레이션"], title: '한국전기연구원 idP 플랫폼 고도화', short: 'idP 플랫폼',
+    periods: [['2024-07', '2024-12']], cats: ['ai', 'design', 'build'], client: '한국전기연구원',
+    desc: '기존 연구 시스템을 분석 솔루션과 연계해 사용자 정의 모델을 생성하고 시뮬레이션하는 플랫폼입니다.',
+    roles: ['인프라 및 시스템 아키텍처 설계', '백엔드 연계 프로그램 개발'],
+    results: ['기존 시스템과의 데이터 연계', '연계 데이터 기반 AI 수치 예측 프로그램 구축'],
+    tech: ['Python', 'Flask', 'Docker', 'Java', 'Spring Boot']
+  },
+  {
+    id: 'plm', aiTypes: ["예측 모델(ML/DL)"], ai: ["부품 특성 회귀 예측 시뮬레이터"], title: '서한산업 PLM-PLUS 시스템 구축', short: 'PLM-PLUS',
+    periods: [['2023-10', '2025-07']], cats: ['build', 'design', 'ai'], client: '서한산업',
+    desc: '차량 부품의 도면 데이터와 해석 데이터를 전산화해 검색하고 버전을 관리하는 시스템입니다.',
+    roles: ['인프라 및 시스템 아키텍처 설계', '백엔드 연계 프로그램 개발'],
+    results: ['도면 데이터 전산화로 업무 소요 시간 단축'],
+    tech: ['Java', 'Spring Boot', 'Spring Security', 'JWT', 'JPA', 'QueryDSL', 'MySQL/MariaDB', 'DB2', 'JavaScript', 'Vue.js', 'Vuetify', 'Plotly.js', 'Tomcat', 'GitLab CI']
+  },
+  {
+    id: 'diark', aiTypes: ["예측 모델(ML/DL)", "생성 모델"], ai: ["딥러닝 예측·분류 모델 학습", "학습 데이터 증강"], title: 'di-ark AI 모델 학습 솔루션 개발', short: 'di-ark AI 학습 솔루션',
+    periods: [['2023-01', '2024-12']], cats: ['ai', 'design', 'build'], client: '사내',
+    desc: '오랜 시간이 소요되는 기존 솔루션의 시뮬레이션을 AI 예측으로 대체하는 제조 데이터 분석 솔루션입니다.',
+    roles: ['프로젝트 리더', '인프라 및 시스템 아키텍처 설계', '백엔드 연계 프로그램 개발'],
+    results: ['기존 시뮬레이션 솔루션 대비 예측 시간 단축', '기존 시뮬레이션 솔루션 수준의 예측 정확도'],
+    tech: ['Java', 'Spring Boot', 'JavaScript', 'Vue.js', 'Vuetify', 'MySQL/MariaDB', 'Docker', 'Python', 'Tomcat']
+  },
+  {
+    id: 'kbu-sm', title: '서울 시각장애인 생활이동지원센터 배차·관제 시스템 유지보수', short: '배차·관제 시스템 유지보수',
+    periods: [['2022-01', null]], cats: ['ops'], client: '서울 시각장애인 생활이동지원센터',
+    desc: '24/7 운영 시각장애인 생활이동지원 배차·관제 시스템입니다.',
+    roles: ['배차·관제 시스템 및 서버 운영·유지보수', '배차 장애 대응 및 기사 앱 유지보수', '리버스 엔지니어링'],
+    results: ['자동 배차 중단·미터기 연동 등 운영 장애 원인 규명 및 해결', '24/7 무중단 서비스 운영'],
+    tech: ['C#', 'Java', 'Spring Boot', 'MS-SQL', 'Socket.IO', 'Kotlin', 'Android', 'BLE', 'Windows Server', 'Apache', 'Tomcat'],
+    /* 기존 시스템은 C# 프로그램, 재구축(2025. 03) 이후 Java 기반 */
+    techPeriods: { 'C#': [['2022-01', '2025-03']], 'Java': [['2025-03', null]], 'Spring Boot': [['2025-03', null]], 'Tomcat': [['2025-03', null]] }
+  },
+  {
+    id: 'textile', aiTypes: ["컴퓨터 비전"], ai: ["섬유 이미지 기반 소재 품질 예측"], title: '섬유소재 성능예측·품질관리 빅데이터 플랫폼 구축', short: '섬유소재 품질 예측 플랫폼',
+    periods: [['2021-07', '2023-05']], cats: ['ai', 'build'],
+    desc: '섬유 이미지와 물성 데이터로 소재의 성능과 품질을 예측하는 빅데이터 플랫폼입니다.',
+    roles: ['프로젝트 실무 관리자', '섬유 이미지 디지털 데이터화 방안, 목표 달성 방안 수립', '플랫폼 설계·개발'],
+    results: ['섬유소재 품질 예측 정확도 86%', '물성 데이터 51,291건, 관능 데이터 2,100건 디지털화'],
+    tech: ['Java', 'JSP']
+  },
+  {
+    id: 'aimm', aiTypes: ["자연어 처리"], ai: ["리스크 단어의 동의어 판단"], title: 'LG전자 AIMM 문서 보안 시스템 구축', short: 'AIMM 문서 보안',
+    periods: [['2018-08', '2021-03']], cats: ['build', 'ops', 'ai'], client: 'LG전자',
+    desc: '클라우드 PC에 저장된 문서의 위험도를 텍스트 분석으로 판정하는 문서 보안 모니터링 시스템입니다.',
+    roles: ['웹 페이지 개발', '시스템 유지보수 및 성능 개선'],
+    results: ['문서 수집과 데이터 전달 성능 10% 향상', '프로그램 오류 비율 20% 개선'],
+    tech: ['Java', 'JSP', 'Kafka', 'RabbitMQ', 'Splunk']
+  },
+  {
+    id: 'juso', title: '국가주소시스템 유지보수', short: '국가주소시스템 유지보수',
+    periods: [['2018-01', '2021-11']], cats: ['ops'],
+    desc: '국가주소시스템 트래픽 관리 시스템의 운영·유지보수입니다.',
+    roles: ['트래픽 관리 시스템 유지보수'],
+    results: ['소프트웨어 증설'],
+    tech: ['Splunk']
+  },
+  {
+    id: 'piko', title: 'PIKO 다문화 스마트러닝 교육 서비스 개발', short: 'PIKO 스마트러닝',
+    periods: [['2017-12', '2018-05']], cats: ['build'],
+    desc: '다문화 구성원을 위한 스마트러닝 교육 서비스입니다.',
+    roles: ['언어 학습 모듈 연동 API 개발'],
+    tech: ['Java', 'JSP']
+  }
+];
+const TECH_GROUPS = [
+  { name: '언어', items: ['Java', 'JavaScript', 'Python', 'C++', 'Kotlin', 'C#', 'Ruby'] },
+  { name: '백엔드', items: ['Spring Boot', 'Spring Security', 'JPA', 'QueryDSL', 'Quartz', 'JWT', 'Flask', 'Ruby on Rails', '.NET 8'] },
+  { name: '웹 프론트엔드', items: ['Vue.js', 'Vuetify', 'Pinia', 'Plotly.js', 'JSP'] },
+  { name: '데스크톱 · 모바일', items: ['Qt 5', 'Android'] },
+  { name: '데이터베이스 · 분석', items: ['MySQL/MariaDB', 'MS-SQL', 'PostgreSQL', 'DB2', 'Splunk'] },
+  { name: '메시징 · 통신', items: ['Kafka', 'RabbitMQ', 'Socket.IO', 'FCM', 'BLE'] },
+  { name: '서버 · 인프라', items: ['Ubuntu', 'Rocky Linux', 'Windows Server', 'nginx', 'Apache', 'Tomcat', 'Docker'] },
+  { name: 'CI/CD · 협업', items: ['GitLab CI', 'Jenkins', 'Redmine'] },
+  { name: 'AI 유형', items: ['컴퓨터 비전', 'VLM', 'LLM·RAG', '유사도 검색', '이상치 탐지', '예측 모델(ML/DL)', '생성 모델', '자연어 처리', '음성 처리', 'OCR'] },
+  { name: '영상 · 그래픽', items: ['FFmpeg', 'OpenCV', 'OpenGL', 'DICOM'] }
+];
+/*__PROJECTS_END__*/
+
+/* ===================== LOGIC ===================== */
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const Y0 = 2017, YEARS = 10, TOTAL = YEARS * 12;
+  const idx = ym => { const [y, m] = ym.split('-').map(Number); return (y - Y0) * 12 + (m - 1); };
+  const fmt = ym => ym.replace('-', '. ');
+  const endOf = p => p[1] || NOW;
+
+  PROJECTS.forEach(p => {
+    p.s = Math.min(...p.periods.map(x => idx(x[0])));
+    p.e = Math.max(...p.periods.map(x => idx(endOf(x))));
+    p.months = p.periods.reduce((a, x) => a + idx(endOf(x)) - idx(x[0]) + 1, 0);
+    p.ongoing = p.periods.some(x => !x[1]);
+    p.cat = p.cats[0];
+    p.allTech = (p.tech || []).concat(p.aiTypes || []);
+    p.hay = [p.title, p.desc || '', p.client || '', p.allTech.join(' '), (p.ai || []).join(' '), (p.roles || []).join(' '), (p.results || []).join(' ')].join(' ').toLowerCase();
+  });
+  const ordered = PROJECTS.slice().sort((a, b) => (b.e - a.e) || (b.s - a.s));
+  const dur = m => { const y = Math.floor(m / 12), r = m % 12; return (y ? y + '년 ' : '') + (r ? r + '개월' : (y ? '' : '1개월')); };
+  const periodText = p => p.periods.map(x => fmt(x[0]) + ' ~ ' + (x[1] ? fmt(x[1]) : '진행중')).join(' / ');
+
+  const state = { cat: 'all', year: null, tech: null, q: '', sel: null };
+
+  /* ---- stats ---- */
+  const careerMonths = idx(NOW) - idx('2017-12');
+  $('#stats').innerHTML = [
+    [dur(careerMonths), '총 경력'],
+    [PROJECTS.length + '건', '대표 프로젝트'],
+    ['정보처리기사', '2018. 08 취득']
+  ].map(s => `<div class="stat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('');
+
+  /* ---- category chips ---- */
+  const catWrap = $('#catChips');
+  catWrap.innerHTML = `<button class="chip on" data-cat="all" type="button">전체</button> ` +
+    Object.entries(CATS).map(([k, v]) => `<button class="chip" data-cat="${k}" type="button"><i style="background:var(--${k})"></i>${v}</button>`).join(' ');
+  catWrap.addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    state.cat = b.dataset.cat; $$('.chip', catWrap).forEach(c => c.classList.toggle('on', c === b)); render();
+  });
+
+  /* ---- gantt ---- */
+  const axis = $('#axis');
+  for (let i = 0; i < YEARS; i++) {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = Y0 + i; b.dataset.year = Y0 + i; axis.appendChild(b);
+  }
+  axis.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const y = +b.dataset.year; state.year = state.year === y ? null : y; render();
+  });
+
+  const laneEnd = [];
+  ordered.slice().sort((a, b) => (a.s - b.s) || (b.e - a.e)).forEach(p => {
+    let l = laneEnd.findIndex(e => e < p.s);
+    if (l < 0) { l = laneEnd.length; laneEnd.push(-1); }
+    laneEnd[l] = p.e; p.lane = l;
+  });
+  const LH = 30, lanes = $('#lanes');
+  lanes.style.height = (laneEnd.length * LH + 14) + 'px';
+  let html = '<div class="gridlines">' + '<span></span>'.repeat(YEARS) + '</div>';
+  PROJECTS.forEach((p, n) => {
+    const top = 10 + p.lane * LH;
+    if (p.periods.length > 1) {
+      html += `<div class="link" data-id="${p.id}" style="left:${p.s / TOTAL * 100}%;width:${(p.e + 1 - p.s) / TOTAL * 100}%;top:${top + 12}px"></div>`;
+    }
+    p.periods.forEach((x, k) => {
+      const s = idx(x[0]), e = idx(endOf(x)) + 1;
+      html += `<button type="button" class="bar ${p.cat}${p.cats.includes('design') ? ' has-design' : ''}${p.minor ? ' minor' : ''}" data-id="${p.id}" style="left:${s / TOTAL * 100}%;width:calc(${(e - s) / TOTAL * 100}% - 2px);top:${top}px;animation-delay:${Math.min(n * 25, 500)}ms">${k === 0 || (e - s) > 8 ? esc(p.short || p.title) : ''}</button>`;
+    });
+  });
+  html += `<div class="now" style="left:${(idx(NOW) + 0.6) / TOTAL * 100}%"></div>`;
+  lanes.innerHTML = html;
+
+  const tip = $('#tip');
+  lanes.addEventListener('mousemove', e => {
+    const b = e.target.closest('.bar');
+    if (!b) { tip.style.display = 'none'; return; }
+    const p = byId(b.dataset.id);
+    tip.innerHTML = `<b>${esc(p.title)}</b>${esc(periodText(p))} · ${esc(dur(p.months))}`;
+    tip.style.display = 'block';
+    const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+    tip.style.left = x + 'px'; tip.style.top = (e.clientY + 16) + 'px';
+  });
+  lanes.addEventListener('mouseleave', () => tip.style.display = 'none');
+  lanes.addEventListener('click', e => { const b = e.target.closest('.bar'); if (b) select(b.dataset.id, true); });
+
+  /* ---- tech matrix ---- */
+  /* 주력도 = (프로젝트 건수 비율 + 사용 기간 비율) / 2. 기간은 겹치는 달을 한 번만 셈 */
+  const techStat = {};
+  TECH_GROUPS.forEach(g => g.items.forEach(t => {
+    const ps = PROJECTS.filter(p => p.allTech.includes(t)), months = new Set();
+    ps.forEach(p => ((p.techPeriods && p.techPeriods[t]) || p.periods).forEach(x => { for (let i = idx(x[0]); i <= idx(endOf(x)); i++) months.add(i); }));
+    techStat[t] = { c: ps.length, m: Math.min(months.size, careerMonths) };
+  }));
+  const maxC = Math.max(...Object.values(techStat).map(v => v.c)), maxM = Math.max(...Object.values(techStat).map(v => v.m));
+  Object.values(techStat).forEach(v => { v.score = (v.c / maxC + v.m / maxM) / 2; });
+  $('#techGrid').innerHTML = TECH_GROUPS.map(g => `<div class="tech-group"><h4>${esc(g.name)}</h4><div class="tags">` +
+    g.items.slice().sort((x, y) => techStat[y].score - techStat[x].score).map(t => {
+      const v = techStat[t], pct = Math.round(v.score * 100);
+      return `<button type="button" class="tchip${v.c ? '' : ' none'}${pct >= 55 ? ' hot' : ''}" data-tech="${esc(t)}" style="--p:${pct}%" title="프로젝트 ${v.c}건 · 사용 기간 ${dur(v.m)}" ${v.c ? '' : 'disabled'}>${esc(t)}${v.c ? ` <small>${v.c}</small>` : ''}</button>`;
+    }).join('') +
+    '</div></div>').join('');
+  $('#techGrid').addEventListener('click', e => {
+    const b = e.target.closest('.tchip'); if (!b || b.disabled) return;
+    setTech(b.dataset.tech);
+  });
+  function setTech(t) {
+    state.tech = state.tech === t ? null : t; render();
+    if (state.tech) $('.gantt-scroll').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ---- filtering ---- */
+  function byId(id) { return PROJECTS.find(p => p.id === id); }
+  function match(p) {
+    if (state.cat !== 'all' && !p.cats.includes(state.cat)) return false;
+    if (state.tech && !p.allTech.includes(state.tech)) return false;
+    if (state.q && !p.hay.includes(state.q)) return false;
+    if (state.year) { const a = (state.year - Y0) * 12, b = a + 11; if (!p.periods.some(x => idx(x[0]) <= b && idx(endOf(x)) >= a)) return false; }
+    return true;
+  }
+  function visible() { return ordered.filter(match); }
+
+  function render() {
+    const vis = visible(), ids = new Set(vis.map(p => p.id));
+    $$('.bar, .link', lanes).forEach(b => b.classList.toggle('dim', !ids.has(b.dataset.id)));
+    $$('.bar', lanes).forEach(b => b.classList.toggle('sel', b.dataset.id === state.sel));
+    $$('button', axis).forEach(b => b.classList.toggle('on', +b.dataset.year === state.year));
+    $$('.tchip').forEach(b => b.classList.toggle('on', b.dataset.tech === state.tech));
+    $('#count').textContent = `${vis.length} / ${PROJECTS.length}`;
+    $('#list').innerHTML = vis.length ? vis.map(p =>
+      `<button type="button" class="item${p.id === state.sel ? ' sel' : ''}" data-id="${p.id}"><i style="background:var(--${p.cat})"></i><div><b>${esc(p.title)}</b><span>${esc(periodText(p))}</span></div></button>`).join('')
+      : '<div class="empty">조건에 맞는 프로젝트가 없습니다.</div>';
+    if (vis.length && !ids.has(state.sel)) select(vis[0].id, false);
+  }
+  $('#list').addEventListener('click', e => { const b = e.target.closest('.item'); if (b) select(b.dataset.id, false); });
+  $('#search').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); render(); });
+  $('#resetBtn').addEventListener('click', () => {
+    state.cat = 'all'; state.year = null; state.tech = null; state.q = ''; $('#search').value = '';
+    $$('.chip', catWrap).forEach(c => c.classList.toggle('on', c.dataset.cat === 'all')); render();
+  });
+
+  /* ---- detail ---- */
+  function listCol(title, arr) { return arr && arr.length ? `<div class="col"><h4>${title}</h4><ul>` + arr.map(x => `<li>${esc(x)}</li>`).join('') + '</ul></div>' : ''; }
+  function detailHtml(p, forPrint) {
+    const tech = p.tech && p.tech.length
+      ? '<div class="tags">' + p.tech.map(t => forPrint ? `<span class="tag">${esc(t)}</span>` : `<button type="button" class="tag" data-tech="${esc(t)}">${esc(t)}</button>`).join('') + '</div>'
+      : '';
+    const aiTags = (p.aiTypes || []).map(t => forPrint ? `<span class="tag ai-tag">${esc(t)}</span>` : `<button type="button" class="tag ai-tag" data-tech="${esc(t)}">${esc(t)}</button>`).join('');
+    const aiCol = p.ai && p.ai.length ? `<div class="col ai-col"><h4>AI 활용</h4>${aiTags ? `<div class="tags" style="margin-bottom:8px">${aiTags}</div>` : ''}<ul>${p.ai.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
+    return `<div class="d-body">
+      <div class="d-top"><h3>${esc(p.title)}</h3></div>
+      <div class="d-meta">${p.cats.map(c => `<span class="badge ${c}">${esc(CATS[c])}</span>`).join('')}<span>${esc(periodText(p))}</span><span>· ${esc(dur(p.months))}</span>${p.client ? `<span>· ${esc(p.client)}</span>` : ''}</div>
+      ${p.desc ? `<p class="d-desc">${esc(p.desc)}</p>` : ''}
+      <div class="cols">
+        ${listCol('역할', p.roles)}
+        ${listCol('성과', p.results)}
+        ${tech ? `<div class="col"><h4>적용 기술</h4>${tech}</div>` : ''}
+        ${aiCol}
+      </div>
+    </div>`;
+  }
+  const detail = $('#detail');
+  function select(id, scroll) {
+    state.sel = id; const p = byId(id);
+    detail.innerHTML = detailHtml(p, false);
+    detail.classList.remove('swap'); void detail.offsetWidth; detail.classList.add('swap');
+    $$('.bar', lanes).forEach(b => b.classList.toggle('sel', b.dataset.id === id));
+    $$('.item').forEach(b => b.classList.toggle('sel', b.dataset.id === id));
+    const it = $(`.item[data-id="${id}"]`); if (it) it.scrollIntoView({ block: 'nearest' });
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    if (scroll) detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function step(d) {
+    const vis = visible(); if (!vis.length) return;
+    const i = vis.findIndex(p => p.id === state.sel);
+    select(vis[(i + d + vis.length) % vis.length].id, false);
+  }
+  detail.addEventListener('click', e => {
+    const t = e.target.closest('.tag[data-tech]'); if (t) setTech(t.dataset.tech);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.matches('input, textarea')) return;
+    if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1);
+  });
+
+  /* ---- print view (Ctrl+P) ---- */
+  $('#printAll').innerHTML = ordered.map(p => `<div class="p-item">${detailHtml(p, true)}</div>`).join('');
+
+  /* ---- init ---- */
+  render();
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h && byId(h)) select(h, false);
+})();
+</script>
+</body>
+</html>
